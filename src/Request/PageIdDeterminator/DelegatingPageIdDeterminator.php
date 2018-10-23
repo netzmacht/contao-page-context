@@ -25,10 +25,10 @@ final class DelegatingPageIdDeterminator implements PageIdDeterminator
         $this->determinators = $determinators;
     }
 
-    public function supports(Request $request): bool
+    public function match(Request $request): bool
     {
         foreach ($this->determinators as $determinator) {
-            if ($determinator->supports($request)) {
+            if ($determinator->match($request)) {
                 return true;
             }
         }
@@ -39,7 +39,7 @@ final class DelegatingPageIdDeterminator implements PageIdDeterminator
     public function determinate(Request $request): int
     {
         foreach ($this->determinators as $determinator) {
-            if ($determinator->supports($request)) {
+            if ($determinator->match($request)) {
                 return $determinator->determinate($request);
             }
         }

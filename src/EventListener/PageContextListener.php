@@ -72,7 +72,7 @@ final class PageContextListener
     {
         $request = $event->getRequest();
 
-        if (!$this->pagIdDeterminator->supports($request)) {
+        if (!$this->pagIdDeterminator->match($request)) {
             return;
         }
 
