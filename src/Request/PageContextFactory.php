@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Contao Page Context
+ *
+ * @package    contao-page-context
+ * @author     David Molineus <david.molineus@netzmacht.de>
+ * @copyright  2018 netzmacht David Molineus.
+ * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
+ * @filesource
+ */
+
 declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\Request;
@@ -34,7 +44,7 @@ final class PageContextFactory
     /**
      * Create page context from a given page id.
      *
-     * @param int $pageId Page id for the page context
+     * @param int $pageId Page id for the page context.
      *
      * @return PageContext
      *
@@ -45,14 +55,14 @@ final class PageContextFactory
         $pageModel = $this->pageRepository->find($pageId);
 
         if (!$pageModel instanceof PageModel) {
-            throw InitializePageContextFailed::invalidPageId($pageId);
+            throw InitializePageContextFailed::pageNotFound($pageId);
         }
 
         $pageModel->loadDetails();
         $rootPage = $this->pageRepository->find((int) $pageModel->rootId);
 
         if (!$rootPage instanceof PageModel) {
-            throw InitializePageContextFailed::noRootPage($pageModel->id);
+            throw InitializePageContextFailed::rootPageNotFound($pageModel->id);
         }
 
         return new PageContext($pageModel, $rootPage);

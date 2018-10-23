@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Contao Page Context
+ *
+ * @package    contao-page-context
+ * @author     David Molineus <david.molineus@netzmacht.de>
+ * @copyright  2018 netzmacht David Molineus.
+ * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
+ * @filesource
+ */
+
 declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\EventListener;
@@ -67,6 +77,8 @@ final class PageContextListener
 
     /**
      * {@inheritdoc}
+     *
+     * @throws AccessDeniedException If user is not granted to access page context.
      */
     public function __invoke(KernelEvent $event): void
     {
@@ -80,7 +92,9 @@ final class PageContextListener
         $context = ($this->contextFactory)($pageId);
 
         if (!$this->authorizationChecker->isGranted(PageContextVoter::VIEW, $context)) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedException(
+                sprintf('Access denied to page context ID "%s" for given URI "%s"', $pageId, $request->getUri())
+            );
         }
 
         $request->attributes->set('_page_context', $context);
