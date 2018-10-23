@@ -83,7 +83,7 @@ final class PageContextListener
             throw new AccessDeniedException();
         }
 
-        $request->attributes->set('pageContext', $context);
+        $request->attributes->set('_page_context', $context);
         $this->initializer->initialize($context, $request);
     }
 }
