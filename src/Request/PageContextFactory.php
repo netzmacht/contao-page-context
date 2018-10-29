@@ -16,8 +16,7 @@ namespace Netzmacht\Contao\PageContext\Request;
 
 use Contao\PageModel;
 use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
-use Netzmacht\Contao\Toolkit\Data\Model\Repository;
-use Symfony\Component\HttpFoundation\Request;
+use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 
 /**
  * Class PageContextFactory creates the page context from a request or page id
@@ -25,20 +24,20 @@ use Symfony\Component\HttpFoundation\Request;
 final class PageContextFactory
 {
     /**
-     * Page repository.
+     * Repository manager.
      *
-     * @var Repository
+     * @var RepositoryManager
      */
-    private $pageRepository;
+    private $repositoryManager;
 
     /**
      * PageContextFactory constructor.
      *
-     * @param Repository $pageRepository Page repository.
+     * @param RepositoryManager $repositoryManager Repository manager.
      */
-    public function __construct(Repository $pageRepository)
+    public function __construct(RepositoryManager $repositoryManager)
     {
-        $this->pageRepository = $pageRepository;
+        $this->repositoryManager = $repositoryManager;
     }
 
     /**
@@ -52,14 +51,15 @@ final class PageContextFactory
      */
     public function __invoke(int $pageId): PageContext
     {
-        $pageModel = $this->pageRepository->find($pageId);
+        $repository = $this->repositoryManager->getRepository(PageModel::class);
+        $pageModel  = $repository->find($pageId);
 
         if (!$pageModel instanceof PageModel) {
             throw InitializePageContextFailed::pageNotFound($pageId);
         }
 
         $pageModel->loadDetails();
-        $rootPage = $this->pageRepository->find((int) $pageModel->rootId);
+        $rootPage = $repository->find((int) $pageModel->rootId);
 
         if (!$rootPage instanceof PageModel) {
             throw InitializePageContextFailed::rootPageNotFound($pageModel->id);

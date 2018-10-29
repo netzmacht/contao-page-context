@@ -130,6 +130,7 @@ final class PageContextInitializer
      */
     public function initialize(PageContext $context, Request $request): void
     {
+        $this->framework->initialize();
         $this->initializeUserLoggedInConstants();
         $this->initializeGlobals($context);
         $this->initializeLocale($context, $request);

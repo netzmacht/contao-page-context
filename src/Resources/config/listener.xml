@@ -10,7 +10,7 @@
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextFactory" />
             <argument type="service" id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" />
             <argument type="service" id="security.authorization_checker" />
-            <tag name="kernel.event_listener" event="kernel.request" method="__invoke" />
+            <tag name="kernel.event_listener" event="kernel.controller" method="__invoke" />
         </service>
     </services>
 </container>

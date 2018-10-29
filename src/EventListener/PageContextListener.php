@@ -32,7 +32,7 @@ final class PageContextListener
      *
      * @var PageIdDeterminator
      */
-    private $pagIdDeterminator;
+    private $pageIdDeterminator;
 
     /**
      * Page context factory.
@@ -69,7 +69,7 @@ final class PageContextListener
         PageContextInitializer $initializer,
         AuthorizationCheckerInterface $authorizationChecker
     ) {
-        $this->pagIdDeterminator    = $pagIdDeterminator;
+        $this->pageIdDeterminator   = $pagIdDeterminator;
         $this->contextFactory       = $contextFactory;
         $this->initializer          = $initializer;
         $this->authorizationChecker = $authorizationChecker;
@@ -84,11 +84,11 @@ final class PageContextListener
     {
         $request = $event->getRequest();
 
-        if (!$this->pagIdDeterminator->match($request)) {
+        if (!$this->pageIdDeterminator->match($request)) {
             return;
         }
 
-        $pageId  = $this->pagIdDeterminator->determinate($request);
+        $pageId  = $this->pageIdDeterminator->determinate($request);
         $context = ($this->contextFactory)($pageId);
 
         if (!$this->authorizationChecker->isGranted(PageContextVoter::VIEW, $context)) {

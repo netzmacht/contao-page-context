@@ -10,13 +10,8 @@
             <argument type="collection"/>
         </service>
 
-        <service id="netzmacht.contao_page_context.page_repository" class="Netzmacht\Contao\Toolkit\Data\Model\Repository">
-            <factory service="netzmacht.contao_toolkit.repository_manager" method="getRepository" />
-            <argument>Contao\PageModel</argument>
-        </service>
-
         <service id="Netzmacht\Contao\PageContext\Request\PageContextFactory">
-            <argument type="service" id="netzmacht.contao_page_context.page_repository" />
+            <argument type="service" id="netzmacht.contao_toolkit.repository_manager" />
         </service>
 
         <service id="Netzmacht\Contao\PageContext\Request\PageContextInitializer">
