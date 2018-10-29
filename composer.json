@@ -55,7 +55,7 @@
         ]
     },
     "extra": {
-        "contao-manager-plugin": "Netzmacht\\Contao\\PageContext\\Bundle\\ContaoManager\\Plugin",
+        "contao-manager-plugin": "Netzmacht\\Contao\\PageContext\\ContaoManager\\Plugin",
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
