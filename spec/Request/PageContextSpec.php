@@ -18,7 +18,7 @@ use Contao\PageModel;
 use Netzmacht\Contao\PageContext\Request\PageContext;
 use PhpSpec\ObjectBehavior;
 
-class PageContextSpec extends ObjectBehavior
+final class PageContextSpec extends ObjectBehavior
 {
     public function let(PageModel $pageModel, PageModel $rootPage): void
     {

@@ -18,7 +18,7 @@ use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class InitializePageContextFailedSpec extends ObjectBehavior
+final class InitializePageContextFailedSpec extends ObjectBehavior
 {
     public function it_is_initializable(): void
     {

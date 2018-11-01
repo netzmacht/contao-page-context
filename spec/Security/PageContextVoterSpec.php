@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface as AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class PageContextVoterSpec extends ObjectBehavior
+final class PageContextVoterSpec extends ObjectBehavior
 {
     /**
      * @var PageContext

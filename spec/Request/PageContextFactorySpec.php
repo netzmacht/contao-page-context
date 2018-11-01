@@ -15,20 +15,24 @@ declare(strict_types=1);
 namespace spec\Netzmacht\Contao\PageContext\Request;
 
 use Contao\PageModel;
+use function expect;
 use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use Netzmacht\Contao\PageContext\Request\PageContext;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\Toolkit\Data\Model\Repository;
+use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use PhpSpec\ObjectBehavior;
 
-class PageContextFactorySpec extends ObjectBehavior
+final class PageContextFactorySpec extends ObjectBehavior
 {
     private const PAGE_ID = 5;
     private const ROOT_PAGE_ID = 1;
 
-    function let(Repository $pageRepository)
+    public function let(RepositoryManager $repositoryManager, Repository $pageRepository): void
     {
-        $this->beConstructedWith($pageRepository);
+        $this->beConstructedWith($repositoryManager);
+
+        $repositoryManager->getRepository(PageModel::class)->willReturn($pageRepository);
     }
 
     public function it_is_initializable(): void
@@ -62,7 +66,7 @@ class PageContextFactorySpec extends ObjectBehavior
         Repository $pageRepository,
         PageModel $pageModel
     ): void {
-        $pageModel->id     = self::PAGE_ID;
+        $pageModel->id = self::PAGE_ID;
         $pageModel->rootId = self::ROOT_PAGE_ID;
 
         $pageRepository->find(self::PAGE_ID)->willReturn($pageModel);
