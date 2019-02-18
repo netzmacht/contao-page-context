@@ -40,7 +40,9 @@ final class ContaoPageContextInitializerSpec extends ObjectBehavior
             new Invoker($systemAdapter),
             $pictureFactory,
             $repositoryManager,
-            $logger
+            $logger,
+            [],
+            '4.4'
         );
     }
 

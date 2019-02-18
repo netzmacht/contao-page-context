@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\DependencyInjection;
 
-use function dirname;
 use Netzmacht\Contao\PageContext\DependencyInjection\NetzmachtContaoPageContextExtension;
 use Netzmacht\Contao\PageContext\EventListener\PageContextListener;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
@@ -25,6 +24,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use function dirname;
 
 final class NetzmachtContaoPageContextExtensionSpec extends ObjectBehavior
 {
@@ -52,6 +52,10 @@ final class NetzmachtContaoPageContextExtensionSpec extends ObjectBehavior
         $container->setDefinition(PageContextInitializer::class, Argument::type(Definition::class))->shouldBeCalled();
         $container->setDefinition(PageContextVoter::class, Argument::type(Definition::class))->shouldBeCalled();
         $container->setDefinition(PageContextListener::class, Argument::type(Definition::class))->shouldBeCalled();
+
+        $container
+            ->setParameter('netzmacht.contao_page_initializer.contao_core_version', Argument::type('string'))
+            ->shouldBeCalled();
 
         $this->load([], $container);
     }

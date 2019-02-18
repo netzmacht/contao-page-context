@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\DependencyInjection;
 
+use PackageVersions\Versions;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use function explode;
 
 /**
  * Class NetzmachtContaoPageContextExtension
@@ -36,5 +38,10 @@ final class NetzmachtContaoPageContextExtension extends Extension
 
         $loader->load('services.xml');
         $loader->load('listener.xml');
+
+        $contaoVersion = Versions::getVersion('contao/core-bundle');
+        $contaoVersion = explode('@', $contaoVersion, 2)[0];
+
+        $container->setParameter('netzmacht.contao_page_initializer.contao_core_version', $contaoVersion);
     }
 }
