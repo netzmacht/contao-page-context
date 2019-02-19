@@ -21,8 +21,6 @@
             <argument type="service" id="contao.image.picture_factory" />
             <argument type="service" id="netzmacht.contao_toolkit.repository_manager" />
             <argument type="service" id="logger" />
-            <argument type="collection" />
-            <argument type="string">%netzmacht.contao_page_initializer.contao_core_version%</argument>
         </service>
 
         <service id="Netzmacht\Contao\PageContext\Security\PageContextVoter">

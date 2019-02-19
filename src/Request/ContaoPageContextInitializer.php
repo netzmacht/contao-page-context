@@ -5,7 +5,7 @@
  *
  * @package    contao-page-context
  * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018-2019 netzmacht David Molineus.
+ * @copyright  2018 netzmacht David Molineus.
  * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
  * @filesource
  */
@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use function define;
 use function defined;
-use function version_compare;
 
 /**
  * Class PageContextInitializer initialize the page context which is usually done by the Contao regular page.
@@ -93,13 +92,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     private $logger;
 
     /**
-     * Contao core bundle version.
-     *
-     * @var string
-     */
-    private $contaoVersion;
-
-    /**
      * PageContextInitializer constructor.
      *
      * @param TranslatorInterface      $translator        Translator.
@@ -109,7 +101,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * @param RepositoryManager        $repositoryManager Repository manager.
      * @param LoggerInterface          $logger            Logger.
      * @param array                    $defaults          Default config to override default configs.
-     * @param string                   $contaoVersion     Contao version.
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -118,10 +109,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         PictureFactoryInterface $pictureFactory,
         RepositoryManager $repositoryManager,
         LoggerInterface $logger,
-        // @codingStandardsIgnoreStart - Keep order for BC reasons
-        array $defaults = [],
-        string $contaoVersion
-        // @codingStandardsIgnoreEnd
+        array $defaults = []
     ) {
         $this->translator        = $translator;
         $this->framework         = $framework;
@@ -130,7 +118,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $this->repositoryManager = $repositoryManager;
         $this->logger            = $logger;
         $this->defaults          = array_merge($this->defaults, $defaults);
-        $this->contaoVersion     = $contaoVersion;
     }
 
     /**
@@ -255,15 +242,11 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $page->template      = $layout->template ?: 'fe_page';
         $page->templateGroup = $theme->templates;
 
-        // Output format got removed in Contao 4.7
-        // See: https://github.com/contao/contao/commit/d1013778f90bd8c123f5e8ea1a527ecc05c616f2
-        if (version_compare($this->contaoVersion, '4.7', '<')) {
-            // Store the output format
-            [$strFormat, $strVariant] = explode('_', $layout->doctype);
+        // Store the output format
+        [$strFormat, $strVariant] = explode('_', $layout->doctype);
 
-            $page->outputFormat  = $strFormat;
-            $page->outputVariant = $strVariant;
-        }
+        $page->outputFormat  = $strFormat;
+        $page->outputVariant = $strVariant;
     }
 
     /**
