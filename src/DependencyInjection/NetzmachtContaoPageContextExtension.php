@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\DependencyInjection;
 
+use OutOfBoundsException;
 use PackageVersions\Versions;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,9 +40,15 @@ final class NetzmachtContaoPageContextExtension extends Extension
         $loader->load('services.xml');
         $loader->load('listener.xml');
 
-        $contaoVersion = Versions::getVersion('contao/core-bundle');
-        $contaoVersion = explode('@', $contaoVersion, 2)[0];
+        try {
+            $contaoVersion = Versions::getVersion('contao/core-bundle');
+        } catch (OutOfBoundsException $e) {
+            $contaoVersion = Versions::getVersion('contao/contao');
+        }
 
-        $container->setParameter('netzmacht.contao_page_initializer.contao_core_version', $contaoVersion);
+        $container->setParameter(
+            'netzmacht.contao_page_initializer.contao_core_version',
+            explode('@', $contaoVersion, 2)[0]
+        );
     }
 }
