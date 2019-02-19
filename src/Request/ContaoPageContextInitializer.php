@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use function define;
 use function defined;
+use function is_string;
 
 /**
  * Class PageContextInitializer initialize the page context which is usually done by the Contao regular page.
@@ -242,11 +243,14 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $page->template      = $layout->template ?: 'fe_page';
         $page->templateGroup = $theme->templates;
 
-        // Store the output format
-        [$strFormat, $strVariant] = explode('_', $layout->doctype);
+        $doctype = $layout->doctype;
+        if (is_string($doctype)) {
+            // Store the output format
+            [$strFormat, $strVariant] = explode('_', $doctype);
 
-        $page->outputFormat  = $strFormat;
-        $page->outputVariant = $strVariant;
+            $page->outputFormat  = $strFormat;
+            $page->outputVariant = $strVariant;
+        }
     }
 
     /**
