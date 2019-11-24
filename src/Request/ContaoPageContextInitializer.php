@@ -22,6 +22,7 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use Contao\PageRegular;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\ThemeModel;
@@ -223,11 +224,12 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      */
     private function initializePageLayout(PageContext $context, Request $request): void
     {
-        $page   = $context->page();
-        $layout = $this->getPageLayout($page, $request);
+        $page        = $context->page();
+        $layout      = $this->getPageLayout($page, $request);
+        $pageRegular = new PageRegular();
 
         if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout'])) {
-            $this->callbackInvoker->invokeAll($GLOBALS['TL_HOOKS']['getPageLayout'], [$page, $layout, $this]);
+            $this->callbackInvoker->invokeAll($GLOBALS['TL_HOOKS']['getPageLayout'], [$page, $layout, $pageRegular]);
         }
 
         /** @var ThemeModel $theme */

@@ -19,6 +19,7 @@ env:
   - CONTAO_VERSION=contao/core-bundle ~4.5.0
   - CONTAO_VERSION=contao/core-bundle ~4.6.0
   - CONTAO_VERSION=contao/core-bundle ~4.7.0
+  - CONTAO_VERSION=contao/core-bundle ~4.8.0
 
 matrix:
   exclude:
@@ -27,6 +28,7 @@ matrix:
     - php: "7.4snapshot"
     - env: CONTAO_VERSION=contao/core-bundle ~4.5.0
     - env: CONTAO_VERSION=contao/core-bundle ~4.6.0
+    - env: CONTAO_VERSION=contao/core-bundle ~4.7.0
 
 install:
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
