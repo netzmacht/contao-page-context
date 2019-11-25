@@ -26,7 +26,6 @@ use Contao\PageRegular;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\ThemeModel;
-use Netzmacht\Contao\Toolkit\Callback\Invoker;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -127,7 +126,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $this->initializeGlobals($context);
         $this->initializeLocale($context, $request);
         $this->initializeStaticUrls();
-        $this->initializePageLayout($context, $request);
+        $this->initializePageLayout($context);
     }
 
     /**
@@ -206,16 +205,15 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * Initialize the page layout.
      *
      * @param PageContext $context Page context.
-     * @param Request     $request Web request.
      *
      * @return void
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    private function initializePageLayout(PageContext $context, Request $request): void
+    private function initializePageLayout(PageContext $context): void
     {
         $page        = $context->page();
-        $layout      = $this->getPageLayout($page, $request);
+        $layout      = $this->getPageLayout($page);
         $pageRegular = new PageRegular();
 
         if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout'])) {
@@ -253,17 +251,15 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * Get a page layout and return it as database result object
      *
      * @param PageModel $pageModel The page model.
-     * @param Request   $request   Web request.
      *
      * @return LayoutModel
      *
      * @throws NoLayoutSpecifiedException If no page layout could be found.
      */
-    private function getPageLayout(PageModel $pageModel, Request $request): LayoutModel
+    private function getPageLayout(PageModel $pageModel): LayoutModel
     {
-        /** @var LayoutModel $layoutModel */
-        $isMobile    = $request->query->get('view') === 'mobile';
-        $layoutId    = (int) (($isMobile && $pageModel->mobileLayout) ? $pageModel->mobileLayout : $pageModel->layout);
+        /** @var LayoutModel|null $layoutModel */
+        $layoutId    = (int) $pageModel->layout;
         $layoutModel = $this->repositoryManager->getRepository(LayoutModel::class)->find($layoutId);
 
         // Die if there is no layout
@@ -273,12 +269,12 @@ final class ContaoPageContextInitializer implements PageContextInitializer
                 'Could not find layout ID "' . $layoutId . '"',
                 ['contao' => new ContaoContext(__METHOD__, LogLevel::ERROR)]
             );
+
             throw new NoLayoutSpecifiedException('No layout specified');
         }
 
         $pageModel->hasJQuery   = $layoutModel->addJQuery;
         $pageModel->hasMooTools = $layoutModel->addMooTools;
-        $pageModel->isMobile    = $isMobile;
 
         return $layoutModel;
     }

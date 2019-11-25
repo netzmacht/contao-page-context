@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace spec\Netzmacht\Contao\PageContext\DependencyInjection;
 
 use Netzmacht\Contao\PageContext\DependencyInjection\NetzmachtContaoPageContextExtension;
+use Netzmacht\Contao\PageContext\EventListener\MobilePageLayoutListener;
 use Netzmacht\Contao\PageContext\EventListener\PageContextListener;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
@@ -57,6 +58,7 @@ final class NetzmachtContaoPageContextExtensionSpec extends ObjectBehavior
         $container->setDefinition(PageContextInitializer::class, Argument::type(Definition::class))->shouldBeCalled();
         $container->setDefinition(PageContextVoter::class, Argument::type(Definition::class))->shouldBeCalled();
         $container->setDefinition(PageContextListener::class, Argument::type(Definition::class))->shouldBeCalled();
+        $container->setDefinition(MobilePageLayoutListener::class, Argument::type(Definition::class))->shouldBeCalled();
 
         $this->load([], $container);
     }

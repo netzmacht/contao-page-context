@@ -12,5 +12,14 @@
             <argument type="service" id="security.authorization_checker" />
             <tag name="kernel.event_listener" event="kernel.controller" method="__invoke" />
         </service>
+
+        <service id="Netzmacht\Contao\PageContext\EventListener\MobilePageLayoutListener">
+            <argument type="service" id="contao.framework"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="netzmacht.contao_toolkit.repository_manager"/>
+            <argument type="service" id="logger"/>
+            <argument>%kernel.bundles%</argument>
+            <tag name="contao.hook" hook="getPageLayout"/>
+        </service>
     </services>
 </container>
