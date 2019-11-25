@@ -66,13 +66,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     private $framework;
 
     /**
-     * Callback invoker.
-     *
-     * @var Invoker
-     */
-    private $callbackInvoker;
-
-    /**
      * Picture factory.
      *
      * @var PictureFactoryInterface
@@ -98,7 +91,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      *
      * @param TranslatorInterface      $translator        Translator.
      * @param ContaoFrameworkInterface $framework         Contao framework.
-     * @param Invoker                  $callbackInvoker   Callback invoker.
      * @param PictureFactoryInterface  $pictureFactory    Picture factory.
      * @param RepositoryManager        $repositoryManager Repository manager.
      * @param LoggerInterface          $logger            Logger.
@@ -107,7 +99,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     public function __construct(
         TranslatorInterface $translator,
         ContaoFrameworkInterface $framework,
-        Invoker $callbackInvoker,
         PictureFactoryInterface $pictureFactory,
         RepositoryManager $repositoryManager,
         LoggerInterface $logger,
@@ -115,7 +106,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     ) {
         $this->translator        = $translator;
         $this->framework         = $framework;
-        $this->callbackInvoker   = $callbackInvoker;
         $this->pictureFactory    = $pictureFactory;
         $this->repositoryManager = $repositoryManager;
         $this->logger            = $logger;
@@ -229,7 +219,11 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $pageRegular = new PageRegular();
 
         if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout'])) {
-            $this->callbackInvoker->invokeAll($GLOBALS['TL_HOOKS']['getPageLayout'], [$page, $layout, $pageRegular]);
+            $systemAdapter = $this->framework->getAdapter(System::class);
+            foreach ($GLOBALS['TL_HOOKS']['generatePage'] as $callback) {
+                $callback[0] = $systemAdapter->__call('importStatic', [$callback[0]]);
+                $callback[0]->{$callback[1]}($page, $layout, $pageRegular);
+            }
         }
 
         /** @var ThemeModel $theme */

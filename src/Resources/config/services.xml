@@ -17,7 +17,6 @@
         <service id="Netzmacht\Contao\PageContext\Request\PageContextInitializer" class="Netzmacht\Contao\PageContext\Request\ContaoPageContextInitializer">
             <argument type="service" id="translator" />
             <argument type="service" id="contao.framework" />
-            <argument type="service" id="netzmacht.contao_toolkit.callback_invoker" />
             <argument type="service" id="contao.image.picture_factory" />
             <argument type="service" id="netzmacht.contao_toolkit.repository_manager" />
             <argument type="service" id="logger" />
