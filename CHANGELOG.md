@@ -1,6 +1,13 @@
 
 # Changelog
 
+## [1.1.0] - 2022-01-20
+
+### Changed
+
+ - Bump dependencies to Contao `^4.9` and Symfony `^4.4 || ^5.1`
+ - Extract mobile layout handling in separat listener
+
 ## [1.0.2] - 2019-11-24
 
 ### Fixed

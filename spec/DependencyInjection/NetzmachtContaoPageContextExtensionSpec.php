@@ -1,20 +1,11 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\DependencyInjection;
 
 use Netzmacht\Contao\PageContext\DependencyInjection\NetzmachtContaoPageContextExtension;
+use Netzmacht\Contao\PageContext\EventListener\MobilePageLayoutListener;
 use Netzmacht\Contao\PageContext\EventListener\PageContextListener;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
@@ -24,6 +15,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+
 use function dirname;
 use function method_exists;
 
@@ -46,7 +38,7 @@ final class NetzmachtContaoPageContextExtensionSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $container->hasExtension("http://symfony.com/schema/dic/services")->willReturn(false);
+        $container->hasExtension('http://symfony.com/schema/dic/services')->willReturn(false);
 
         if (method_exists($container->getWrappedObject(), 'removeBindings')) {
             $container->removeBindings(Argument::type('string'))->shouldBeCalled();
@@ -57,6 +49,7 @@ final class NetzmachtContaoPageContextExtensionSpec extends ObjectBehavior
         $container->setDefinition(PageContextInitializer::class, Argument::type(Definition::class))->shouldBeCalled();
         $container->setDefinition(PageContextVoter::class, Argument::type(Definition::class))->shouldBeCalled();
         $container->setDefinition(PageContextListener::class, Argument::type(Definition::class))->shouldBeCalled();
+        $container->setDefinition(MobilePageLayoutListener::class, Argument::type(Definition::class))->shouldBeCalled();
 
         $this->load([], $container);
     }

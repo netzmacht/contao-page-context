@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\EventListener;
@@ -39,9 +29,7 @@ final class PageContextListenerSpec extends ObjectBehavior
 
     private const LAYOUT_ID = 3;
 
-    /**
-     * @var PageContextFactory
-     */
+    /** @var PageContextFactory */
     private $contextFactory;
 
     public function let(
@@ -62,18 +50,18 @@ final class PageContextListenerSpec extends ObjectBehavior
         $this->beConstructedWith($pageIdDeterminator, $this->contextFactory, $initializer, $authorizationChecker);
 
         $pageIdDeterminator->determinate(Argument::type(Request::class))
-            ->willReturn(static::PAGE_ID);
+            ->willReturn(self::PAGE_ID);
 
         $repositoryManager->getRepository(PageModel::class)
             ->willReturn($pageRepository);
 
         $repositoryManager->getRepository(LayoutModel::class)->willReturn($layoutRepository);
 
-        $pageModel->rootId = static::ROOT_PAGE_ID;
-        $pageModel->layout = static::LAYOUT_ID;
+        $pageModel->rootId = self::ROOT_PAGE_ID;
+        $pageModel->layout = self::LAYOUT_ID;
 
-        $pageRepository->find(static::PAGE_ID)->willReturn($pageModel);
-        $pageRepository->find(static::ROOT_PAGE_ID)->willReturn($rootPageModel);
+        $pageRepository->find(self::PAGE_ID)->willReturn($pageModel);
+        $pageRepository->find(self::ROOT_PAGE_ID)->willReturn($rootPageModel);
 
         $authorizationChecker->isGranted(PageContextVoter::VIEW, Argument::type(PageContext::class))->willReturn(true);
 
