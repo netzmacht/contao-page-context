@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\DependencyInjection\Compiler;
@@ -20,6 +10,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 final class PageIdDeterminatorPassSpec extends ObjectBehavior
 {
@@ -40,13 +31,18 @@ final class PageIdDeterminatorPassSpec extends ObjectBehavior
         $this->process($container);
     }
 
-    public function it_assigns_tagged_determinators_to_determinator_service_(
+    public function it_assigns_tagged_determinators_to_determinator_service(
         ContainerBuilder $container,
-        Definition $definition
+        Definition $definition,
+        Definition $referenceDefinition,
+        ParameterBagInterface $parameterBag
     ): void {
         $container->hasDefinition(PageIdDeterminator::class)
             ->shouldBeCalled()
             ->willReturn(true);
+
+        $container->getParameterBag()
+            ->willReturn($parameterBag);
 
         $definition->getClass()->willReturn(PageIdDeterminator\DelegatingPageIdDeterminator::class);
         $definition->getTags()->willReturn([['name' => PageIdDeterminator::class]]);
@@ -62,6 +58,10 @@ final class PageIdDeterminatorPassSpec extends ObjectBehavior
             ->willReturn($definition);
 
         $references = ['foo' => []];
+
+        $container
+            ->getDefinition('foo')
+            ->willReturn($referenceDefinition);
 
         $container->findTaggedServiceIds(PageIdDeterminator::class, true)->willReturn($references);
 

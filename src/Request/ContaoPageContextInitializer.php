@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\Request;
@@ -32,9 +22,15 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+
+use function array_merge;
+use function assert;
 use function define;
 use function defined;
+use function explode;
+use function is_array;
 use function is_string;
+use function str_replace;
 
 /**
  * Class PageContextInitializer initialize the page context which is usually done by the Contao regular page.
@@ -44,7 +40,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     /**
      * Default config.
      *
-     * @var array
+     * @var array<string,bool>
      */
     private $defaults = [
         'BE_USER_LOGGED_IN' => false,
@@ -94,15 +90,13 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     private $logger;
 
     /**
-     * PageContextInitializer constructor.
-     *
      * @param TranslatorInterface      $translator        Translator.
      * @param ContaoFrameworkInterface $framework         Contao framework.
      * @param Invoker                  $callbackInvoker   Callback invoker.
      * @param PictureFactoryInterface  $pictureFactory    Picture factory.
      * @param RepositoryManager        $repositoryManager Repository manager.
      * @param LoggerInterface          $logger            Logger.
-     * @param array                    $defaults          Default config to override default configs.
+     * @param array<string,bool>       $defaults          Default config to override default configs.
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -127,8 +121,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      *
      * @param PageContext $context Page context.
      * @param Request     $request Web request.
-     *
-     * @return void
      */
     public function initialize(PageContext $context, Request $request): void
     {
@@ -144,18 +136,18 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * Initialize user logged in constants set by default.
      *
      * You can't trust this constants, as only defaults values are set right now.
-     *
-     * @return void
      */
     private function initializeUserLoggedInConstants(): void
     {
-        if (!defined('BE_USER_LOGGED_IN')) {
+        if (! defined('BE_USER_LOGGED_IN')) {
             define('BE_USER_LOGGED_IN', $this->defaults['BE_USER_LOGGED_IN']);
         }
 
-        if (!defined('FE_USER_LOGGED_IN')) {
-            define('FE_USER_LOGGED_IN', $this->defaults['FE_USER_LOGGED_IN']);
+        if (defined('FE_USER_LOGGED_IN')) {
+            return;
         }
+
+        define('FE_USER_LOGGED_IN', $this->defaults['FE_USER_LOGGED_IN']);
     }
 
     /**
@@ -163,15 +155,13 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      *
      * @param PageContext $context The page context.
      *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
     private function initializeGlobals(PageContext $context): void
     {
         $page = $context->page();
 
-        if ($page->adminEmail != '') {
+        if ($page->adminEmail !== '') {
             $adminEmail = $page->adminEmail;
         } else {
             $adminEmail = $this->framework->getAdapter(Config::class)->get('adminEmail');
@@ -189,8 +179,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      *
      * @param PageContext $context Page context.
      * @param Request     $request Web request.
-     *
-     * @return void
      */
     private function initializeLocale(PageContext $context, Request $request): void
     {
@@ -204,8 +192,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
 
     /**
      * Initialize static urls.
-     *
-     * @return void
      */
     private function initializeStaticUrls(): void
     {
@@ -218,8 +204,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * @param PageContext $context Page context.
      * @param Request     $request Web request.
      *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
     private function initializePageLayout(PageContext $context, Request $request): void
@@ -228,12 +212,12 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $layout      = $this->getPageLayout($page, $request);
         $pageRegular = new PageRegular();
 
-        if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout'])) {
+        if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && is_array($GLOBALS['TL_HOOKS']['getPageLayout'])) {
             $this->callbackInvoker->invokeAll($GLOBALS['TL_HOOKS']['getPageLayout'], [$page, $layout, $pageRegular]);
         }
 
-        /** @var ThemeModel $theme */
         $theme = $this->repositoryManager->getRepository(ThemeModel::class)->find((int) $layout->pid);
+        assert($theme instanceof ThemeModel);
 
         // Set the default image densities
         $this->pictureFactory->setDefaultDensities($theme->defaultImageDensities);
@@ -246,13 +230,15 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $page->templateGroup = $theme->templates;
 
         $doctype = $layout->doctype;
-        if (is_string($doctype)) {
-            // Store the output format
-            [$strFormat, $strVariant] = explode('_', $doctype);
-
-            $page->outputFormat  = $strFormat;
-            $page->outputVariant = $strVariant;
+        if (! is_string($doctype)) {
+            return;
         }
+
+        // Store the output format
+        [$strFormat, $strVariant] = explode('_', $doctype);
+
+        $page->outputFormat  = $strFormat;
+        $page->outputVariant = $strVariant;
     }
 
     /**
@@ -261,24 +247,22 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * @param PageModel $pageModel The page model.
      * @param Request   $request   Web request.
      *
-     * @return LayoutModel
-     *
      * @throws NoLayoutSpecifiedException If no page layout could be found.
      */
     private function getPageLayout(PageModel $pageModel, Request $request): LayoutModel
     {
-        /** @var LayoutModel $layoutModel */
         $isMobile    = $request->query->get('view') === 'mobile';
-        $layoutId    = (int) (($isMobile && $pageModel->mobileLayout) ? $pageModel->mobileLayout : $pageModel->layout);
+        $layoutId    = (int) ($isMobile && $pageModel->mobileLayout ? $pageModel->mobileLayout : $pageModel->layout);
         $layoutModel = $this->repositoryManager->getRepository(LayoutModel::class)->find($layoutId);
 
         // Die if there is no layout
-        if ($layoutModel === null) {
+        if (! $layoutModel instanceof LayoutModel) {
             $this->logger->log(
                 LogLevel::ERROR,
                 'Could not find layout ID "' . $layoutId . '"',
                 ['contao' => new ContaoContext(__METHOD__, LogLevel::ERROR)]
             );
+
             throw new NoLayoutSpecifiedException('No layout specified');
         }
 

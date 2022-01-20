@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\Security;
@@ -20,12 +10,11 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverIn
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface as Token;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface as AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+use function array_intersect;
 use function count;
 use function is_array;
 
-/**
- * Class PageContextVoter
- */
 final class PageContextVoter extends Voter
 {
     public const VIEW = 'view';
@@ -45,8 +34,6 @@ final class PageContextVoter extends Voter
     private $authorizationChecker;
 
     /**
-     * PageContextVoter constructor.
-     *
      * @param AuthenticationTrustResolver $trustResolver        Authentication trust resolver.
      * @param AuthorizationChecker        $authorizationChecker Authorization checker.
      */
@@ -67,11 +54,7 @@ final class PageContextVoter extends Voter
             return false;
         }
 
-        if ($subject instanceof PageContext) {
-            return true;
-        }
-
-        return false;
+        return $subject instanceof PageContext;
     }
 
     /**
@@ -81,15 +64,13 @@ final class PageContextVoter extends Voter
      * @param PageContext $pageContext The page context.
      * @param Token       $token       The authentication token.
      *
-     * @return bool
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function voteOnAttribute($attribute, $pageContext, Token $token): bool
     {
         $page = $pageContext->page();
 
-        if (!$page->protected) {
+        if (! $page->protected) {
             return true;
         }
 
@@ -97,20 +78,17 @@ final class PageContextVoter extends Voter
             return false;
         }
 
-        if (!$this->authorizationChecker->isGranted('ROLE_MEMBER')) {
+        if (! $this->authorizationChecker->isGranted('ROLE_MEMBER')) {
             return false;
         }
 
         $user = $token->getUser();
-        if (!$user instanceof FrontendUser) {
+        if (! $user instanceof FrontendUser) {
             return false;
         }
 
         $groups = $page->groups;
-        if (empty($groups) || !is_array($groups) || !count(array_intersect($groups, $user->groups))) {
-            return false;
-        }
 
-        return true;
+        return ! empty($groups) && is_array($groups) && count(array_intersect($groups, $user->groups));
     }
 }

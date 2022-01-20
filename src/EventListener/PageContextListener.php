@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\EventListener;
@@ -22,9 +12,8 @@ use Netzmacht\Contao\PageContext\Security\PageContextVoter;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * Class PageContextListener
- */
+use function sprintf;
+
 final class PageContextListener
 {
     /**
@@ -56,8 +45,6 @@ final class PageContextListener
     private $authorizationChecker;
 
     /**
-     * PageContextListener constructor.
-     *
      * @param PageIdDeterminator            $pagIdDeterminator    Page id determinator.
      * @param PageContextFactory            $contextFactory       Page context factory.
      * @param PageContextInitializer        $initializer          Page context initializer.
@@ -84,14 +71,14 @@ final class PageContextListener
     {
         $request = $event->getRequest();
 
-        if (!$this->pageIdDeterminator->match($request)) {
+        if (! $this->pageIdDeterminator->match($request)) {
             return;
         }
 
         $pageId  = $this->pageIdDeterminator->determinate($request);
         $context = ($this->contextFactory)($pageId);
 
-        if (!$this->authorizationChecker->isGranted(PageContextVoter::VIEW, $context)) {
+        if (! $this->authorizationChecker->isGranted(PageContextVoter::VIEW, $context)) {
             throw new AccessDeniedException(
                 sprintf('Access denied to page context ID "%s" for given URI "%s"', $pageId, $request->getUri())
             );

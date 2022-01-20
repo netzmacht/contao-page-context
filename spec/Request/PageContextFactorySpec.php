@@ -1,21 +1,10 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018 netzmacht David Molineus.
- * @license    LGPL-3.0 https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\Request;
 
 use Contao\PageModel;
-use function expect;
 use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use Netzmacht\Contao\PageContext\Request\PageContext;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
@@ -25,7 +14,7 @@ use PhpSpec\ObjectBehavior;
 
 final class PageContextFactorySpec extends ObjectBehavior
 {
-    private const PAGE_ID = 5;
+    private const PAGE_ID      = 5;
     private const ROOT_PAGE_ID = 1;
 
     public function let(RepositoryManager $repositoryManager, Repository $pageRepository): void
@@ -66,7 +55,7 @@ final class PageContextFactorySpec extends ObjectBehavior
         Repository $pageRepository,
         PageModel $pageModel
     ): void {
-        $pageModel->id = self::PAGE_ID;
+        $pageModel->id     = self::PAGE_ID;
         $pageModel->rootId = self::ROOT_PAGE_ID;
 
         $pageRepository->find(self::PAGE_ID)->willReturn($pageModel);
