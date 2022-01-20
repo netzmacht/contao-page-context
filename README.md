@@ -33,8 +33,8 @@ In detail it, initialize following steps:
 Requirements
 ------------
 
- - Contao 4.4
- - PHP >= 7.1
+ - Contao `^4.9`
+ - PHP `^7.1 || ^8.0`
  
 Installation
 ------------
@@ -90,7 +90,7 @@ Now you have to register it as a service and tag it as `Netzmacht\Contao\PageCon
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services
-        http://symfony.com/schema/dic/services/services-1.0.xsd">
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
         <service id="My\Bundle\MyPageIdDeterminator">
@@ -110,7 +110,7 @@ your route configuration:
 <routes xmlns="http://symfony.com/schema/routing"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing
-        http://symfony.com/schema/routing/routing-1.0.xsd">
+        https://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="my_route" controller="My\Bundle\Action\ApiAction" path="/my/api/{pageId}" >
         <default key="_my_context">page</default>
