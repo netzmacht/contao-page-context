@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @package    contao-page-context
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2018-2019 netzmacht David Molineus.
- * @license    LGPL-3.0-or-later https://github.com/netzmacht/contao-page-context/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\EventListener;
@@ -61,18 +51,16 @@ final class MobilePageLayoutListener
     /**
      * List of active bundles.
      *
-     * @var array
+     * @var array<string,mixed>
      */
     private $activeBundles;
 
     /**
-     * MobilePageLayoutListener constructor.
-     *
      * @param ContaoFrameworkInterface $framework         Contao framework.
      * @param RequestStack             $requestStack      TTP request stack.
      * @param RepositoryManager        $repositoryManager Repository manager.
      * @param LoggerInterface          $logger            Logger.
-     * @param array                    $activeBundles     List of active kernel bundles.
+     * @param array<string,mixed>      $activeBundles     List of active kernel bundles.
      */
     public function __construct(
         ContaoFrameworkInterface $framework,
@@ -94,29 +82,26 @@ final class MobilePageLayoutListener
      * @param PageModel   $pageModel   The page model.
      * @param LayoutModel $layoutModel The current layout model.
      *
-     * @return void
-     *
      * @throws NoLayoutSpecifiedException When mobile layout could not be loaded.
      */
-    public function onGetPageLayout(PageModel $pageModel, LayoutModel &$layoutModel) : void
+    public function onGetPageLayout(PageModel $pageModel, LayoutModel &$layoutModel): void
     {
-        if (!$pageModel->mobileLayout || isset($this->activeBundles['ContaoMobilePageLayoutBundle'])) {
+        if (! $pageModel->mobileLayout || isset($this->activeBundles['ContaoMobilePageLayoutBundle'])) {
             $pageModel->isMobile = false;
 
             return;
         }
 
-        /** @var Environment $environment */
         $environment = $this->framework->getAdapter(Environment::class);
         $isMobile    = $environment->get('agent')->mobile;
         $request     = $this->requestStack->getMasterRequest();
 
-        if (null !== $request && $request->cookies->has('TL_VIEW')) {
-            $isMobile = 'mobile' === $request->cookies->get('TL_VIEW');
+        if ($request !== null && $request->cookies->has('TL_VIEW')) {
+            $isMobile = $request->cookies->get('TL_VIEW') === 'mobile';
         }
 
         $pageModel->isMobile = $isMobile;
-        if (!$isMobile) {
+        if (! $isMobile) {
             return;
         }
 

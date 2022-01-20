@@ -242,7 +242,6 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      */
     private function getPageLayout(PageModel $pageModel): LayoutModel
     {
-        /** @var LayoutModel|null $layoutModel */
         $layoutId    = (int) $pageModel->layout;
         $layoutModel = $this->repositoryManager->getRepository(LayoutModel::class)->find($layoutId);
 
