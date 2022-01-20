@@ -60,15 +60,16 @@ final class PageContextVoter extends Voter
     /**
      * Vote the page context.
      *
-     * @param string      $attribute   The attribute.
-     * @param PageContext $pageContext The page context.
-     * @param Token       $token       The authentication token.
+     * @param string      $attribute The attribute.
+     * @param PageContext $subject   The page context.
+     * @param Token       $token     The authentication token.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @psalm-suppress MoreSpecificImplementedParamType
      */
-    protected function voteOnAttribute($attribute, $pageContext, Token $token): bool
+    protected function voteOnAttribute($attribute, $subject, Token $token): bool
     {
-        $page = $pageContext->page();
+        $page = $subject->page();
 
         if (! $page->protected) {
             return true;
@@ -89,6 +90,6 @@ final class PageContextVoter extends Voter
 
         $groups = $page->groups;
 
-        return ! empty($groups) && is_array($groups) && count(array_intersect($groups, $user->groups));
+        return ! empty($groups) && is_array($groups) && count(array_intersect($groups, (array) $user->groups));
     }
 }

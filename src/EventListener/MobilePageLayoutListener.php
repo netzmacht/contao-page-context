@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\EventListener;
 
-use Contao\CoreBundle\ContaoFrameworkInterface;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Environment;
 use Contao\LayoutModel;
@@ -15,6 +15,8 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use function assert;
+
 /**
  * MobilePageLayoutListener initializes the mobile page layout for Contao < 4.8
  */
@@ -23,7 +25,7 @@ final class MobilePageLayoutListener
     /**
      * Contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -56,14 +58,14 @@ final class MobilePageLayoutListener
     private $activeBundles;
 
     /**
-     * @param ContaoFrameworkInterface $framework         Contao framework.
-     * @param RequestStack             $requestStack      TTP request stack.
-     * @param RepositoryManager        $repositoryManager Repository manager.
-     * @param LoggerInterface          $logger            Logger.
-     * @param array<string,mixed>      $activeBundles     List of active kernel bundles.
+     * @param ContaoFramework     $framework         Contao framework.
+     * @param RequestStack        $requestStack      TTP request stack.
+     * @param RepositoryManager   $repositoryManager Repository manager.
+     * @param LoggerInterface     $logger            Logger.
+     * @param array<string,mixed> $activeBundles     List of active kernel bundles.
      */
     public function __construct(
-        ContaoFrameworkInterface $framework,
+        ContaoFramework $framework,
         RequestStack $requestStack,
         RepositoryManager $repositoryManager,
         LoggerInterface $logger,
@@ -108,6 +110,7 @@ final class MobilePageLayoutListener
         $layoutModel = $this->repositoryManager
             ->getRepository(LayoutModel::class)
             ->find((int) $pageModel->mobileLayout);
+        assert($layoutModel instanceof LayoutModel || $layoutModel === null);
 
         if ($layoutModel === null) {
             $this->logger->log(

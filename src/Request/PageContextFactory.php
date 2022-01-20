@@ -42,10 +42,11 @@ final class PageContextFactory
         }
 
         $pageModel->loadDetails();
+        /** @psalm-suppress RedundantCastGivenDocblockType - Contao doc type issue */
         $rootPage = $repository->find((int) $pageModel->rootId);
 
         if (! $rootPage instanceof PageModel) {
-            throw InitializePageContextFailed::rootPageNotFound($pageModel->id);
+            throw InitializePageContextFailed::rootPageNotFound((int) $pageModel->id);
         }
 
         return new PageContext($pageModel, $rootPage);

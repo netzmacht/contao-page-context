@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\Request;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Netzmacht\Contao\PageContext\Request\ContaoPageContextInitializer;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 final class ContaoPageContextInitializerSpec extends ObjectBehavior
 {
     public function let(
-        TranslatorInterface $translator,
-        ContaoFrameworkInterface $framework,
+        LocaleAwareInterface $translator,
+        ContaoFramework $framework,
         PictureFactoryInterface $pictureFactory,
         RepositoryManager $repositoryManager,
         LoggerInterface $logger

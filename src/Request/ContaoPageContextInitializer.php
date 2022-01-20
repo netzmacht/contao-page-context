@@ -7,7 +7,7 @@ namespace Netzmacht\Contao\PageContext\Request;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\LayoutModel;
@@ -20,7 +20,7 @@ use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 use function array_merge;
 use function assert;
@@ -49,14 +49,14 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     /**
      * Translator.
      *
-     * @var TranslatorInterface
+     * @var LocaleAwareInterface
      */
     private $translator;
 
     /**
      * Contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -82,16 +82,16 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     private $logger;
 
     /**
-     * @param TranslatorInterface      $translator        Translator.
-     * @param ContaoFrameworkInterface $framework         Contao framework.
-     * @param PictureFactoryInterface  $pictureFactory    Picture factory.
-     * @param RepositoryManager        $repositoryManager Repository manager.
-     * @param LoggerInterface          $logger            Logger.
-     * @param array<string,bool>       $defaults          Default config to override default configs.
+     * @param LocaleAwareInterface    $translator        Translator.
+     * @param ContaoFramework         $framework         Contao framework.
+     * @param PictureFactoryInterface $pictureFactory    Picture factory.
+     * @param RepositoryManager       $repositoryManager Repository manager.
+     * @param LoggerInterface         $logger            Logger.
+     * @param array<string,bool>      $defaults          Default config to override default configs.
      */
     public function __construct(
-        TranslatorInterface $translator,
-        ContaoFrameworkInterface $framework,
+        LocaleAwareInterface $translator,
+        ContaoFramework $framework,
         PictureFactoryInterface $pictureFactory,
         RepositoryManager $repositoryManager,
         LoggerInterface $logger,
