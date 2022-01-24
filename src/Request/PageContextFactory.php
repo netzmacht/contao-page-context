@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netzmacht\Contao\PageContext\Request;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
@@ -18,11 +19,20 @@ final class PageContextFactory
     private $repositoryManager;
 
     /**
-     * @param RepositoryManager $repositoryManager Repository manager.
+     * The Contao framework.
+     *
+     * @var ContaoFramework
      */
-    public function __construct(RepositoryManager $repositoryManager)
+    private $framework;
+
+    /**
+     * @param RepositoryManager $repositoryManager Repository manager.
+     * @param ContaoFramework   $framework         The Contao framework.
+     */
+    public function __construct(RepositoryManager $repositoryManager, ContaoFramework $framework)
     {
         $this->repositoryManager = $repositoryManager;
+        $this->framework         = $framework;
     }
 
     /**
@@ -34,6 +44,8 @@ final class PageContextFactory
      */
     public function __invoke(int $pageId): PageContext
     {
+        $this->framework->initialize();
+
         $repository = $this->repositoryManager->getRepository(PageModel::class);
         $pageModel  = $repository->find($pageId);
 

@@ -1,6 +1,12 @@
 
 # Changelog
 
+## [1.1.1] - 2022-01-24
+
+### Fixed
+
+ - Make sure that the Contao framework is initialized
+
 ## [1.1.0] - 2022-01-20
 
 ### Changed

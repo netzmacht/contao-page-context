@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\Request;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use Netzmacht\Contao\PageContext\Request\PageContext;
@@ -17,9 +18,12 @@ final class PageContextFactorySpec extends ObjectBehavior
     private const PAGE_ID      = 5;
     private const ROOT_PAGE_ID = 1;
 
-    public function let(RepositoryManager $repositoryManager, Repository $pageRepository): void
-    {
-        $this->beConstructedWith($repositoryManager);
+    public function let(
+        RepositoryManager $repositoryManager,
+        Repository $pageRepository,
+        ContaoFramework $framework
+    ): void {
+        $this->beConstructedWith($repositoryManager, $framework);
 
         $repositoryManager->getRepository(PageModel::class)->willReturn($pageRepository);
     }

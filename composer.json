@@ -46,6 +46,11 @@
       "Netzmacht\\Contao\\PageContext\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "spec\\Netzmacht\\Contao\\PageContext\\": "spec/"
+    }
+  },
   "config": {
     "allow-plugins": {
       "contao-components/installer": true,

@@ -12,6 +12,7 @@
 
         <service id="Netzmacht\Contao\PageContext\Request\PageContextFactory">
             <argument type="service" id="netzmacht.contao_toolkit.repository_manager"/>
+            <argument type="service" id="contao.framework"/>
         </service>
 
         <service id="Netzmacht\Contao\PageContext\Request\PageContextInitializer"

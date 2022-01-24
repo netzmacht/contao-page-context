@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Contao Page Context
- *
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\ContaoManager;

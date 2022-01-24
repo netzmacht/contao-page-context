@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\EventListener;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Netzmacht\Contao\PageContext\EventListener\PageContextListener;
@@ -43,9 +44,13 @@ final class PageContextListenerSpec extends ObjectBehavior
         Repository $pageRepository,
         Repository $layoutRepository,
         PageModel $pageModel,
-        PageModel $rootPageModel
+        PageModel $rootPageModel,
+        ContaoFramework $framework
     ): void {
-        $this->contextFactory = new PageContextFactory($repositoryManager->getWrappedObject());
+        $this->contextFactory = new PageContextFactory(
+            $repositoryManager->getWrappedObject(),
+            $framework->getWrappedObject()
+        );
 
         $this->beConstructedWith($pageIdDeterminator, $this->contextFactory, $initializer, $authorizationChecker);
 

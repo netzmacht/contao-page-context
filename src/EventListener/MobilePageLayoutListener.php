@@ -15,8 +15,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-use function assert;
-
 /**
  * MobilePageLayoutListener initializes the mobile page layout for Contao < 4.8
  */
@@ -110,7 +108,6 @@ final class MobilePageLayoutListener
         $layoutModel = $this->repositoryManager
             ->getRepository(LayoutModel::class)
             ->find((int) $pageModel->mobileLayout);
-        assert($layoutModel instanceof LayoutModel || $layoutModel === null);
 
         if ($layoutModel === null) {
             $this->logger->log(
