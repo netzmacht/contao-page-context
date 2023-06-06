@@ -1,6 +1,12 @@
 
 # Changelog
 
+## [1.1.2] - 2023-06-06
+
+### Fixed
+
+ - Call getPageLayout hook
+
 ## [1.1.1] - 2022-01-24
 
 ### Fixed
