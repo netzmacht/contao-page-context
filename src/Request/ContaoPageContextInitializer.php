@@ -202,7 +202,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
 
         if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && is_array($GLOBALS['TL_HOOKS']['getPageLayout'])) {
             $systemAdapter = $this->framework->getAdapter(System::class);
-            foreach ($GLOBALS['TL_HOOKS']['generatePage'] as $callback) {
+            foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback) {
                 $callback[0] = $systemAdapter->__call('importStatic', [$callback[0]]);
                 $callback[0]->{$callback[1]}($page, $layout, $pageRegular);
             }
