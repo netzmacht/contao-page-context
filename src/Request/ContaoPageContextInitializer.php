@@ -116,6 +116,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         $this->framework->initialize();
         $this->initializeUserLoggedInConstants();
         $this->initializeGlobals($context);
+        $request->attributes->set('pageModel', $context->page());
         $this->initializeLocale($context, $request);
         $this->initializeStaticUrls();
         $this->initializePageLayout($context);
