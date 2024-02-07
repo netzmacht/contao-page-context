@@ -6,6 +6,7 @@ namespace spec\Netzmacht\Contao\PageContext\Request;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Netzmacht\Contao\PageContext\Request\ContaoPageContextInitializer;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use PhpSpec\ObjectBehavior;
@@ -20,6 +21,7 @@ final class ContaoPageContextInitializerSpec extends ObjectBehavior
         PictureFactoryInterface $pictureFactory,
         RepositoryManager $repositoryManager,
         LoggerInterface $logger,
+        TokenChecker $tokenChecker,
     ): void {
         $this->beConstructedWith(
             $translator,
@@ -27,6 +29,7 @@ final class ContaoPageContextInitializerSpec extends ObjectBehavior
             $pictureFactory,
             $repositoryManager,
             $logger,
+            $tokenChecker,
         );
     }
 

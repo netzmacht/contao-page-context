@@ -10,6 +10,7 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\PageRegular;
@@ -22,7 +23,6 @@ use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
-use function array_merge;
 use function assert;
 use function define;
 use function defined;
@@ -37,22 +37,11 @@ use function str_replace;
 final class ContaoPageContextInitializer implements PageContextInitializer
 {
     /**
-     * Default config.
-     *
-     * @var array<string,bool>
-     */
-    private array $defaults = [
-        'BE_USER_LOGGED_IN' => false,
-        'FE_USER_LOGGED_IN' => false,
-    ];
-
-    /**
      * @param LocaleAwareInterface    $translator        Translator.
      * @param ContaoFramework         $framework         Contao framework.
      * @param PictureFactoryInterface $pictureFactory    Picture factory.
      * @param RepositoryManager       $repositoryManager Repository manager.
      * @param LoggerInterface         $logger            Logger.
-     * @param array<string,bool>      $defaults          Default config to override default configs.
      */
     public function __construct(
         private readonly LocaleAwareInterface $translator,
@@ -60,9 +49,8 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         private readonly PictureFactoryInterface $pictureFactory,
         private readonly RepositoryManager $repositoryManager,
         private readonly LoggerInterface $logger,
-        array $defaults = [],
+        private readonly TokenChecker $tokenChecker,
     ) {
-        $this->defaults = array_merge($this->defaults, $defaults);
     }
 
     /**
@@ -85,19 +73,19 @@ final class ContaoPageContextInitializer implements PageContextInitializer
     /**
      * Initialize user logged in constants set by default.
      *
-     * You can't trust this constants, as only defaults values are set right now.
+     * You can't trust these constants, as only defaults values are set right now.
      */
     private function initializeUserLoggedInConstants(): void
     {
         if (! defined('BE_USER_LOGGED_IN')) {
-            define('BE_USER_LOGGED_IN', $this->defaults['BE_USER_LOGGED_IN']);
+            define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
         }
 
         if (defined('FE_USER_LOGGED_IN')) {
             return;
         }
 
-        define('FE_USER_LOGGED_IN', $this->defaults['FE_USER_LOGGED_IN']);
+        define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
     }
 
     /**

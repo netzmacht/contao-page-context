@@ -1,6 +1,17 @@
 
 # Changelog
 
+## [1.2.0] - 2024-02-07
+
+### Changed
+
+ - Bump dependencies to Contao `^4.13 || ^5.2` and Symfony `^5.4 || ^6.4`
+ - Require PHP 8.1
+
+### Fixed
+
+ - Use token checker for legacy `BE_USER_LOGGED_IN` and `FE_USER_LOGGED_IN` constants 
+
 ## [1.1.3] - 2024-02-07
 
 ### Fixed
