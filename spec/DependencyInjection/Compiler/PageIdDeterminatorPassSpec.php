@@ -35,7 +35,7 @@ final class PageIdDeterminatorPassSpec extends ObjectBehavior
         ContainerBuilder $container,
         Definition $definition,
         Definition $referenceDefinition,
-        ParameterBagInterface $parameterBag
+        ParameterBagInterface $parameterBag,
     ): void {
         $container->hasDefinition(PageIdDeterminator::class)
             ->shouldBeCalled()
@@ -44,6 +44,8 @@ final class PageIdDeterminatorPassSpec extends ObjectBehavior
         $container->getParameterBag()
             ->willReturn($parameterBag);
 
+        $definition->isAutoconfigured()->willReturn(false);
+        $definition->hasTag(Argument::type('string'))->willReturn(true);
         $definition->getClass()->willReturn(PageIdDeterminator\DelegatingPageIdDeterminator::class);
         $definition->getTags()->willReturn([['name' => PageIdDeterminator::class]]);
 
@@ -52,12 +54,17 @@ final class PageIdDeterminatorPassSpec extends ObjectBehavior
             ->willReturn([]);
 
         $definition->setArgument(0, Argument::type('array'))
+            ->willReturn($definition->getWrappedObject())
             ->shouldBeCalled();
 
         $container->getDefinition(PageIdDeterminator::class)
             ->willReturn($definition);
 
         $references = ['foo' => []];
+
+        $referenceDefinition->isAutoconfigured()->willReturn(false);
+        $referenceDefinition->hasTag(Argument::type('string'))->willReturn(true);
+        $referenceDefinition->getClass()->willReturn(PageIdDeterminator\DelegatingPageIdDeterminator::class);
 
         $container
             ->getDefinition('foo')

@@ -9,27 +9,11 @@ use Contao\PageModel;
 final class PageContext
 {
     /**
-     * Page model.
-     *
-     * @var PageModel
-     */
-    private $pageModel;
-
-    /**
-     * Root page model.
-     *
-     * @var PageModel
-     */
-    private $rootPage;
-
-    /**
      * @param PageModel $pageModel Page model.
      * @param PageModel $rootPage  Root page model.
      */
-    public function __construct(PageModel $pageModel, PageModel $rootPage)
+    public function __construct(private readonly PageModel $pageModel, private readonly PageModel $rootPage)
     {
-        $this->pageModel = $pageModel;
-        $this->rootPage  = $rootPage;
     }
 
     /**

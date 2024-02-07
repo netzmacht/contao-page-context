@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace spec\Netzmacht\Contao\PageContext\Request;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Model;
 use Contao\PageModel;
 use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use Netzmacht\Contao\PageContext\Request\PageContext;
@@ -12,6 +13,7 @@ use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\Toolkit\Data\Model\Repository;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 use PhpSpec\ObjectBehavior;
+use ReflectionClass;
 
 final class PageContextFactorySpec extends ObjectBehavior
 {
@@ -21,9 +23,14 @@ final class PageContextFactorySpec extends ObjectBehavior
     public function let(
         RepositoryManager $repositoryManager,
         Repository $pageRepository,
-        ContaoFramework $framework
+        ContaoFramework $framework,
     ): void {
         $this->beConstructedWith($repositoryManager, $framework);
+
+        $modelReflection = (new ReflectionClass(Model::class));
+        if ($modelReflection->hasProperty('arrColumnCastTypes')) {
+            $modelReflection->getProperty('arrColumnCastTypes')->setValue(['arrColumnCastTypes' => []]);
+        }
 
         $repositoryManager->getRepository(PageModel::class)->willReturn($pageRepository);
     }
@@ -33,11 +40,13 @@ final class PageContextFactorySpec extends ObjectBehavior
         $this->shouldHaveType(PageContextFactory::class);
     }
 
-    public function it_creates_page_context_for_page_id(
-        Repository $pageRepository,
-        PageModel $pageModel,
-        PageModel $rootPage
-    ): void {
+    public function it_creates_page_context_for_page_id(Repository $pageRepository): void
+    {
+        $pageReflection = new ReflectionClass(PageModel::class);
+        $pageModel      = $pageReflection->newInstanceWithoutConstructor();
+        $rootPage       = $pageReflection->newInstanceWithoutConstructor();
+
+        $pageReflection->getProperty('blnDetailsLoaded')->setValue($pageModel, true);
         $pageModel->rootId = self::ROOT_PAGE_ID;
 
         $pageRepository->find(self::PAGE_ID)->willReturn($pageModel);
@@ -57,9 +66,11 @@ final class PageContextFactorySpec extends ObjectBehavior
 
     public function it_fails_creating_page_context_from_page_id_if_page_doesnt_have_root_page(
         Repository $pageRepository,
-        PageModel $pageModel
     ): void {
-        $pageModel->id     = self::PAGE_ID;
+        $pageReflection = new ReflectionClass(PageModel::class);
+        $pageModel      = $pageReflection->newInstanceWithoutConstructor();
+
+        $pageReflection->getProperty('blnDetailsLoaded')->setValue($pageModel, true);
         $pageModel->rootId = self::ROOT_PAGE_ID;
 
         $pageRepository->find(self::PAGE_ID)->willReturn($pageModel);

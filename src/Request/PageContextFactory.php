@@ -12,27 +12,13 @@ use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
 final class PageContextFactory
 {
     /**
-     * Repository manager.
-     *
-     * @var RepositoryManager
-     */
-    private $repositoryManager;
-
-    /**
-     * The Contao framework.
-     *
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
      * @param RepositoryManager $repositoryManager Repository manager.
      * @param ContaoFramework   $framework         The Contao framework.
      */
-    public function __construct(RepositoryManager $repositoryManager, ContaoFramework $framework)
-    {
-        $this->repositoryManager = $repositoryManager;
-        $this->framework         = $framework;
+    public function __construct(
+        private readonly RepositoryManager $repositoryManager,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**

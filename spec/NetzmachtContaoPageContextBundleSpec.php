@@ -20,6 +20,7 @@ class NetzmachtContaoPageContextBundleSpec extends ObjectBehavior
     public function it_registers_compiler_passes(ContainerBuilder $container): void
     {
         $container->addCompilerPass(Argument::type(PageIdDeterminatorPass::class))
+            ->willReturn($container->getWrappedObject())
             ->shouldBeCalled();
 
         $this->build($container);

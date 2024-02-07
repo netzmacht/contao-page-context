@@ -9,18 +9,26 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Netzmacht\Contao\PageContext\NetzmachtContaoPageContextBundle;
-use Netzmacht\Contao\Toolkit\Bundle\NetzmachtContaoToolkitBundle;
+use Netzmacht\Contao\Toolkit\Bundle\NetzmachtContaoToolkitBundle as NetzmachtContaoToolkit3Bundle;
+use Netzmacht\Contao\Toolkit\NetzmachtContaoToolkitBundle as NetzmachtContaoToolkit4Bundle;
+
+use function class_exists;
 
 final class Plugin implements BundlePluginInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getBundles(ParserInterface $parser): array
     {
+        /** @psalm-suppress UndefinedClass */
+        $toolkitBundle = class_exists(NetzmachtContaoToolkit4Bundle::class)
+            ? NetzmachtContaoToolkit4Bundle::class
+            : NetzmachtContaoToolkit3Bundle::class;
+
         return [
             BundleConfig::create(NetzmachtContaoPageContextBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, NetzmachtContaoToolkitBundle::class]),
+                ->setLoadAfter([ContaoCoreBundle::class, $toolkitBundle]),
         ];
     }
 }

@@ -20,35 +20,17 @@ final class PageContextVoter extends Voter
     public const VIEW = 'view';
 
     /**
-     * Authentication trust resolver.
-     *
-     * @var AuthenticationTrustResolver
-     */
-    private $trustResolver;
-
-    /**
-     * Authorization checker.
-     *
-     * @var AuthorizationChecker
-     */
-    private $authorizationChecker;
-
-    /**
      * @param AuthenticationTrustResolver $trustResolver        Authentication trust resolver.
      * @param AuthorizationChecker        $authorizationChecker Authorization checker.
      */
     public function __construct(
-        AuthenticationTrustResolver $trustResolver,
-        AuthorizationChecker $authorizationChecker
+        private readonly AuthenticationTrustResolver $trustResolver,
+        private readonly AuthorizationChecker $authorizationChecker,
     ) {
-        $this->trustResolver        = $trustResolver;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function supports($attribute, $subject): bool
+    /** {@inheritDoc} */
+    protected function supports(string $attribute, mixed $subject): bool
     {
         if ($attribute !== self::VIEW) {
             return false;
@@ -67,7 +49,7 @@ final class PageContextVoter extends Voter
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @psalm-suppress MoreSpecificImplementedParamType
      */
-    protected function voteOnAttribute($attribute, $subject, Token $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, Token $token): bool
     {
         $page = $subject->page();
 
@@ -75,7 +57,7 @@ final class PageContextVoter extends Voter
             return true;
         }
 
-        if ($this->trustResolver->isAnonymous($token)) {
+        if (! $this->trustResolver->isAuthenticated($token)) {
             return false;
         }
 

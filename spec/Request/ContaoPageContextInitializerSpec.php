@@ -19,14 +19,14 @@ final class ContaoPageContextInitializerSpec extends ObjectBehavior
         ContaoFramework $framework,
         PictureFactoryInterface $pictureFactory,
         RepositoryManager $repositoryManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): void {
         $this->beConstructedWith(
             $translator,
             $framework,
             $pictureFactory,
             $repositoryManager,
-            $logger
+            $logger,
         );
     }
 

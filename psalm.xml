@@ -18,13 +18,7 @@
                 <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>
             </errorLevel>
         </InternalMethod>
-        <DeprecatedMethod>
-            <errorLevel type="suppress">
-                <referencedMethod name="Symfony\Component\HttpFoundation\RequestStack::getMasterRequest"/>
-            </errorLevel>
-        </DeprecatedMethod>
     </issueHandlers>
-
 
     <universalObjectCrates>
         <class name="Contao\LayoutModel"/>

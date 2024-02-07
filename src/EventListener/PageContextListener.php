@@ -17,56 +17,20 @@ use function sprintf;
 final class PageContextListener
 {
     /**
-     * Page id determinator.
-     *
-     * @var PageIdDeterminator
-     */
-    private $pageIdDeterminator;
-
-    /**
-     * Page context factory.
-     *
-     * @var PageContextFactory
-     */
-    private $contextFactory;
-
-    /**
-     * Page context initializer.
-     *
-     * @var PageContextInitializer
-     */
-    private $initializer;
-
-    /**
-     * Authorization checker.
-     *
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
-
-    /**
-     * @param PageIdDeterminator            $pagIdDeterminator    Page id determinator.
+     * @param PageIdDeterminator            $pageIdDeterminator   Page id determinator.
      * @param PageContextFactory            $contextFactory       Page context factory.
      * @param PageContextInitializer        $initializer          Page context initializer.
      * @param AuthorizationCheckerInterface $authorizationChecker Authorization checker.
      */
     public function __construct(
-        PageIdDeterminator $pagIdDeterminator,
-        PageContextFactory $contextFactory,
-        PageContextInitializer $initializer,
-        AuthorizationCheckerInterface $authorizationChecker
+        private readonly PageIdDeterminator $pageIdDeterminator,
+        private readonly PageContextFactory $contextFactory,
+        private readonly PageContextInitializer $initializer,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
-        $this->pageIdDeterminator   = $pagIdDeterminator;
-        $this->contextFactory       = $contextFactory;
-        $this->initializer          = $initializer;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @throws AccessDeniedException If user is not granted to access page context.
-     */
+    /** @throws AccessDeniedException If user is not granted to access page context. */
     public function __invoke(KernelEvent $event): void
     {
         $request = $event->getRequest();
@@ -80,7 +44,7 @@ final class PageContextListener
 
         if (! $this->authorizationChecker->isGranted(PageContextVoter::VIEW, $context)) {
             throw new AccessDeniedException(
-                sprintf('Access denied to page context ID "%s" for given URI "%s"', $pageId, $request->getUri())
+                sprintf('Access denied to page context ID "%s" for given URI "%s"', $pageId, $request->getUri()),
             );
         }
 

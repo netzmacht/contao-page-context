@@ -41,45 +41,10 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      *
      * @var array<string,bool>
      */
-    private $defaults = [
+    private array $defaults = [
         'BE_USER_LOGGED_IN' => false,
         'FE_USER_LOGGED_IN' => false,
     ];
-
-    /**
-     * Translator.
-     *
-     * @var LocaleAwareInterface
-     */
-    private $translator;
-
-    /**
-     * Contao framework.
-     *
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * Picture factory.
-     *
-     * @var PictureFactoryInterface
-     */
-    private $pictureFactory;
-
-    /**
-     * Repository manager.
-     *
-     * @var RepositoryManager
-     */
-    private $repositoryManager;
-
-    /**
-     * Logger.
-     *
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * @param LocaleAwareInterface    $translator        Translator.
@@ -90,19 +55,14 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * @param array<string,bool>      $defaults          Default config to override default configs.
      */
     public function __construct(
-        LocaleAwareInterface $translator,
-        ContaoFramework $framework,
-        PictureFactoryInterface $pictureFactory,
-        RepositoryManager $repositoryManager,
-        LoggerInterface $logger,
-        array $defaults = []
+        private readonly LocaleAwareInterface $translator,
+        private readonly ContaoFramework $framework,
+        private readonly PictureFactoryInterface $pictureFactory,
+        private readonly RepositoryManager $repositoryManager,
+        private readonly LoggerInterface $logger,
+        array $defaults = [],
     ) {
-        $this->translator        = $translator;
-        $this->framework         = $framework;
-        $this->pictureFactory    = $pictureFactory;
-        $this->repositoryManager = $repositoryManager;
-        $this->logger            = $logger;
-        $this->defaults          = array_merge($this->defaults, $defaults);
+        $this->defaults = array_merge($this->defaults, $defaults);
     }
 
     /**
@@ -251,7 +211,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
             $this->logger->log(
                 LogLevel::ERROR,
                 'Could not find layout ID "' . $layoutId . '"',
-                ['contao' => new ContaoContext(__METHOD__, LogLevel::ERROR)]
+                ['contao' => new ContaoContext(__METHOD__, LogLevel::ERROR)],
             );
 
             throw new NoLayoutSpecifiedException('No layout specified');

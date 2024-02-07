@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace spec\Netzmacht\Contao\PageContext\Security;
 
+use Contao\Model;
 use Contao\PageModel;
 use Netzmacht\Contao\PageContext\Request\PageContext;
 use Netzmacht\Contao\PageContext\Security\PageContextVoter;
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
+use ReflectionClass;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface as AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface as AuthorizationChecker;
@@ -15,18 +18,27 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 final class PageContextVoterSpec extends ObjectBehavior
 {
-    /** @var PageContext */
-    private $pageContext;
+    private PageContext $pageContext;
 
     public function let(
         AuthenticationTrustResolver $trustResolver,
         AuthorizationChecker $authorizationChecker,
-        PageModel $page,
-        PageModel $rootPage
     ): void {
         $this->beConstructedWith($trustResolver, $authorizationChecker);
 
-        $this->pageContext = new PageContext($page->getWrappedObject(), $rootPage->getWrappedObject());
+        $modelReflection = (new ReflectionClass(Model::class));
+        if ($modelReflection->hasProperty('arrColumnCastTypes')) {
+            $modelReflection->getProperty('arrColumnCastTypes')->setValue(['arrColumnCastTypes' => []]);
+        }
+
+        $pageReflection = new ReflectionClass(PageModel::class);
+        $page           = $pageReflection->newInstanceWithoutConstructor();
+        $rootPage       = (new ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
+
+        $pageReflection->getProperty('blnDetailsLoaded')->setValue($page, true);
+        $pageReflection->getProperty('blnDetailsLoaded')->setValue($rootPage, true);
+
+        $this->pageContext = new PageContext($page, $rootPage);
     }
 
     public function it_is_initializable(): void
@@ -51,13 +63,15 @@ final class PageContextVoterSpec extends ObjectBehavior
 
     public function it_denies_access_to_unprotected_page_context_with_view_attribute(
         TokenInterface $token,
-        PageModel $page,
-        PageModel $rootPage
+        AuthenticationTrustResolver $trustResolver,
     ): void {
-        $page->protected = true;
-        $pageContext     = new PageContext($page->getWrappedObject(), $rootPage->getWrappedObject());
+        $page     = (new ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
+        $rootPage = (new ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
 
-        $token->isAuthenticated()->willReturn(false);
+        $page->protected = true;
+        $pageContext     = new PageContext($page, $rootPage);
+
+        $trustResolver->isAuthenticated(Argument::any())->willReturn(false);
 
         $this->vote($token, $pageContext, [PageContextVoter::VIEW])->shouldReturn(VoterInterface::ACCESS_DENIED);
     }

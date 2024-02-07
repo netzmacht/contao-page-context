@@ -22,24 +22,25 @@
     "source": "https://github.com/netzmacht/contao-page-context"
   },
   "require": {
-    "php": "^7.1 || ^8.0",
+    "php": "^8.1",
     "beberlei/assert": "^2.7 || ^3.0",
-    "contao/core-bundle": "^4.9",
-    "netzmacht/contao-toolkit": "^3.0",
-    "psr/log": "^1.0",
-    "symfony/config": "^4.4 || ^5.1",
-    "symfony/dependency-injection": "^4.4 || ^5.1",
-    "symfony/http-foundation": "^4.4.7 || ^5.1",
-    "symfony/http-kernel": "^4.4.13 || ^5.1.5",
-    "symfony/security-core": "^4.4.23 || ^5.2.8",
-    "symfony/translation-contracts": "^1.1 || ^2.0"
+    "contao/core-bundle": "^4.13 || ^5.2",
+    "netzmacht/contao-toolkit": "^3.9 || ^4.0",
+    "psr/log": "^1.0 || ^2.0 || ^3.0",
+    "symfony/config": "^5.4 || ^6.0",
+    "symfony/dependency-injection": "^5.4 || ^6.0",
+    "symfony/http-foundation": "^5.4 || ^6.0",
+    "symfony/http-kernel": "^5.4 || ^6.0",
+    "symfony/security-core": "^5.4 || ^6.0",
+    "symfony/translation-contracts": "^1.1 || ^2.0 || ^3.0"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0",
-    "doctrine/coding-standard": "^9.0.",
+    "doctrine/coding-standard": "^12.0",
     "friends-of-phpspec/phpspec-expect": "^4.0",
+    "netzmacht/phpspec-phpcq-plugin": "@dev",
     "phpcq/runner-bootstrap": "^1.0@dev",
-    "phpspec/phpspec": "^6.0 || ^7.0"
+    "phpspec/phpspec": "^7.0"
   },
   "autoload": {
     "psr-4": {
@@ -53,12 +54,14 @@
   },
   "config": {
     "allow-plugins": {
-      "contao-components/installer": true,
-      "ocramius/package-versions": true,
-      "contao/manager-plugin": true,
       "composer/package-versions-deprecated": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+      "contao-components/installer": true,
+      "contao/manager-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "ocramius/package-versions": true,
+      "php-http/discovery": true
+    },
+    "sort-packages": true
   },
   "extra": {
     "branch-alias": {

@@ -11,21 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class DelegatingPageIdDeterminator implements PageIdDeterminator
 {
-    /**
-     * Page id determinators.
-     *
-     * @var PageIdDeterminator[]
-     */
-    private $determinators;
-
-    /**
-     * @param PageIdDeterminator[] $determinators Page id determinators.
-     */
-    public function __construct(array $determinators)
+    /** @param PageIdDeterminator[] $determinators Page id determinators. */
+    public function __construct(private readonly array $determinators)
     {
         Assertion::allImplementsInterface($determinators, PageIdDeterminator::class);
-
-        $this->determinators = $determinators;
     }
 
     public function match(Request $request): bool
@@ -40,7 +29,7 @@ final class DelegatingPageIdDeterminator implements PageIdDeterminator
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @throws DeterminePageIdFailed When page id could not be determined.
      */
