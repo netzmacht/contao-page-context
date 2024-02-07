@@ -1,6 +1,12 @@
 
 # Changelog
 
+## [1.1.3] - 2024-02-07
+
+### Fixed
+
+ - Set pageModel in the request attributes (See [#2](https://github.com/netzmacht/contao-page-context/pull/2) by [@stefanheimes](https://github.com/stefanheimes) )
+
 ## [1.1.2] - 2023-06-06
 
 ### Fixed
