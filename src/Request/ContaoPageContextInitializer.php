@@ -29,6 +29,7 @@ use function defined;
 use function explode;
 use function is_array;
 use function is_string;
+use function method_exists;
 use function str_replace;
 
 /**
@@ -133,6 +134,10 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      */
     private function initializeStaticUrls(): void
     {
+        if (! method_exists(Controller::class, 'setStaticUrls')) {
+            return;
+        }
+
         $this->framework->getAdapter(Controller::class)->setStaticUrls();
     }
 
@@ -161,7 +166,9 @@ final class ContaoPageContextInitializer implements PageContextInitializer
         assert($theme instanceof ThemeModel);
 
         // Set the default image densities
-        $this->pictureFactory->setDefaultDensities($theme->defaultImageDensities);
+        if ($theme->defaultImageDensities) {
+            $this->pictureFactory->setDefaultDensities($theme->defaultImageDensities);
+        }
 
         // Store the layout ID
         $page->layoutId = $layout->id;
