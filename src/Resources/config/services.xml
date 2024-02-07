@@ -22,6 +22,7 @@
             <argument type="service" id="contao.image.picture_factory"/>
             <argument type="service" id="netzmacht.contao_toolkit.repository_manager"/>
             <argument type="service" id="logger"/>
+            <argument type="service" id="contao.security.token_checker"/>
         </service>
 
         <service id="Netzmacht\Contao\PageContext\Security\PageContextVoter">
