@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Netzmacht\Contao\PageContext\EventListener;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Netzmacht\Contao\PageContext\Exception\InitializePageContextFailed;
 use Netzmacht\Contao\PageContext\Request\PageContextFactory;
 use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
 use Netzmacht\Contao\PageContext\Request\PageIdDeterminator;
 use Netzmacht\Contao\PageContext\Security\PageContextVoter;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -39,8 +42,12 @@ final class PageContextListener
             return;
         }
 
-        $pageId  = $this->pageIdDeterminator->determinate($request);
-        $context = ($this->contextFactory)($pageId);
+        try {
+            $pageId  = $this->pageIdDeterminator->determinate($request);
+            $context = ($this->contextFactory)($pageId);
+        } catch (InitializePageContextFailed $exception) {
+            throw new BadRequestException(previous: $exception);
+        }
 
         if (! $this->authorizationChecker->isGranted(PageContextVoter::VIEW, $context)) {
             throw new AccessDeniedException(
