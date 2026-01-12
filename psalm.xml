@@ -11,6 +11,14 @@
         <directory name="src" />
     </projectFiles>
 
+    <issueHandlers>
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Symfony\Component\DependencyInjection\Loader\XmlFileLoader"/>
+            </errorLevel>
+        </DeprecatedClass>
+    </issueHandlers>
+
     <universalObjectCrates>
         <class name="Contao\LayoutModel"/>
         <class name="Contao\PageModel"/>
