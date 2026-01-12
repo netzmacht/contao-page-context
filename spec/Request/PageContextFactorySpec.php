@@ -27,7 +27,7 @@ final class PageContextFactorySpec extends ObjectBehavior
     ): void {
         $this->beConstructedWith($repositoryManager, $framework);
 
-        $modelReflection = (new ReflectionClass(Model::class));
+        $modelReflection = new ReflectionClass(Model::class);
         if ($modelReflection->hasProperty('arrColumnCastTypes')) {
             $modelReflection->getProperty('arrColumnCastTypes')->setValue(['arrColumnCastTypes' => []]);
         }

@@ -53,7 +53,7 @@ final class MobilePageLayoutListener
         }
 
         $environment = $this->framework->getAdapter(Environment::class);
-        $isMobile    = $environment->get('agent')->mobile;
+        $isMobile    = (bool) $environment->get('agent')->mobile;
         $request     = $this->requestStack->getMainRequest();
 
         if ($request !== null && $request->cookies->has('TL_VIEW')) {

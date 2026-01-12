@@ -11,7 +11,6 @@ use Netzmacht\Contao\PageContext\Request\PageContextInitializer;
 use Netzmacht\Contao\PageContext\Request\PageIdDeterminator;
 use Netzmacht\Contao\PageContext\Security\PageContextVoter;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 

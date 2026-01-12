@@ -11,6 +11,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Netzmacht\Contao\PageContext\NetzmachtContaoPageContextBundle;
 use Netzmacht\Contao\Toolkit\Bundle\NetzmachtContaoToolkitBundle as NetzmachtContaoToolkit3Bundle;
 use Netzmacht\Contao\Toolkit\NetzmachtContaoToolkitBundle as NetzmachtContaoToolkit4Bundle;
+use Override;
 
 use function class_exists;
 
@@ -19,6 +20,7 @@ final class Plugin implements BundlePluginInterface
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function getBundles(ParserInterface $parser): array
     {
         /** @psalm-suppress UndefinedClass */

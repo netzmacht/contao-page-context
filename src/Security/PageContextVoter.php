@@ -6,6 +6,7 @@ namespace Netzmacht\Contao\PageContext\Security;
 
 use Contao\FrontendUser;
 use Netzmacht\Contao\PageContext\Request\PageContext;
+use Override;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface as AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface as Token;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface as AuthorizationChecker;
@@ -15,6 +16,7 @@ use function array_intersect;
 use function count;
 use function is_array;
 
+/** @extends Voter<string, PageContext> */
 final class PageContextVoter extends Voter
 {
     public const VIEW = 'view';
@@ -30,6 +32,7 @@ final class PageContextVoter extends Voter
     }
 
     /** {@inheritDoc} */
+    #[Override]
     protected function supports(string $attribute, mixed $subject): bool
     {
         if ($attribute !== self::VIEW) {
@@ -49,6 +52,7 @@ final class PageContextVoter extends Voter
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @psalm-suppress MoreSpecificImplementedParamType
      */
+    #[Override]
     protected function voteOnAttribute(string $attribute, mixed $subject, Token $token): bool
     {
         $page = $subject->page();

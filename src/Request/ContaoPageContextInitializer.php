@@ -18,6 +18,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\ThemeModel;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
+use Override;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +61,7 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      * @param PageContext $context Page context.
      * @param Request     $request Web request.
      */
+    #[Override]
     public function initialize(PageContext $context, Request $request): void
     {
         $this->framework->initialize();
@@ -121,7 +123,8 @@ final class ContaoPageContextInitializer implements PageContextInitializer
      */
     private function initializeLocale(PageContext $context, Request $request): void
     {
-        $locale = str_replace('-', '_', $context->page()->language);
+        /** @psalm-suppress PossiblyInvalidCast */
+        $locale = (string) str_replace('-', '_', $context->page()->language);
 
         $request->setLocale($locale);
         $this->translator->setLocale($locale);

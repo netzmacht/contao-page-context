@@ -7,6 +7,7 @@ namespace Netzmacht\Contao\PageContext\Request\PageIdDeterminator;
 use Assert\Assertion;
 use Netzmacht\Contao\PageContext\Exception\DeterminePageIdFailed;
 use Netzmacht\Contao\PageContext\Request\PageIdDeterminator;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 
 final class DelegatingPageIdDeterminator implements PageIdDeterminator
@@ -17,6 +18,7 @@ final class DelegatingPageIdDeterminator implements PageIdDeterminator
         Assertion::allImplementsInterface($determinators, PageIdDeterminator::class);
     }
 
+    #[Override]
     public function match(Request $request): bool
     {
         foreach ($this->determinators as $determinator) {
@@ -33,6 +35,7 @@ final class DelegatingPageIdDeterminator implements PageIdDeterminator
      *
      * @throws DeterminePageIdFailed When page id could not be determined.
      */
+    #[Override]
     public function determinate(Request $request): int
     {
         foreach ($this->determinators as $determinator) {

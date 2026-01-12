@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Netzmacht\Contao\PageContext\DependencyInjection\Compiler;
 
 use Netzmacht\Contao\PageContext\Request\PageIdDeterminator;
+use Override;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,6 +16,7 @@ final class PageIdDeterminatorPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
+    #[Override]
     public function process(ContainerBuilder $container): void
     {
         if (! $container->hasDefinition(PageIdDeterminator::class)) {

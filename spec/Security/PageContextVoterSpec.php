@@ -26,7 +26,7 @@ final class PageContextVoterSpec extends ObjectBehavior
     ): void {
         $this->beConstructedWith($trustResolver, $authorizationChecker);
 
-        $modelReflection = (new ReflectionClass(Model::class));
+        $modelReflection = new ReflectionClass(Model::class);
         if ($modelReflection->hasProperty('arrColumnCastTypes')) {
             $modelReflection->getProperty('arrColumnCastTypes')->setValue(['arrColumnCastTypes' => []]);
         }

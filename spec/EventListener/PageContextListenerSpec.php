@@ -49,7 +49,7 @@ final class PageContextListenerSpec extends ObjectBehavior
             $framework->getWrappedObject(),
         );
 
-        $modelReflection = (new ReflectionClass(Model::class));
+        $modelReflection = new ReflectionClass(Model::class);
         if ($modelReflection->hasProperty('arrColumnCastTypes')) {
             $modelReflection->getProperty('arrColumnCastTypes')->setValue(['arrColumnCastTypes' => []]);
         }
