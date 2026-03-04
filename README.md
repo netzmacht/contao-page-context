@@ -33,8 +33,8 @@ In detail it, initialize following steps:
 Requirements
 ------------
 
- - Contao `^4.9`
- - PHP `^7.1 || ^8.0`
+ - Contao `^4.13 || ^5.3`
+ - PHP `^8.1`
  
 Installation
 ------------
